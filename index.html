@@ -110,7 +110,7 @@ p{
   font-weight:600;
 }
 
-/* Spark Board */
+/* spark board */
 #sparkBoard input{
   width:100%;
   padding:12px;
@@ -143,7 +143,7 @@ p{
   opacity:.6;
 }
 
-/* Momentum Log */
+/* momentum log */
 #momentum textarea{
   width:100%;
   min-height:90px;
@@ -202,7 +202,6 @@ footer{
   background:var(--glass);
 }
 
-/* hide panels until routing */
 #ignite, #switch, #accelerate, #ascend{
   display:none;
 }
@@ -221,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
   revealSetup();
 });
 
-// show panels
+// panel routing
 function show(id){
   ["ignite","switch","accelerate","ascend"].forEach(x=>{
     document.getElementById(x).style.display="none";
@@ -241,7 +240,7 @@ function revealSetup(){
 
 // spark board
 document.addEventListener("DOMContentLoaded",()=>{
-  const KEY="fire.sparks.v2";
+  const KEY="fire.sparks.v3";
   const list=document.getElementById("sparkList");
   const input=document.getElementById("sparkInput");
 
@@ -250,7 +249,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   function render(){
     const a=read();
-    list.innerHTML = a.length ? a.map((s,i)=>`
+    list.innerHTML = a.length ? a.map((s)=>`
       <div class="spark-item">
         <b>${s.t}</b><br>
         <small>${new Date(s.ts).toLocaleString()}</small>
@@ -273,7 +272,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 // momentum log
 document.addEventListener("DOMContentLoaded",()=>{
-  const KEY="fire.momentum.v1";
+  const KEY="fire.momentum.v2";
   const list=document.getElementById("logList");
   const text=document.getElementById("logText");
 
@@ -282,7 +281,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   function render(){
     const a=read();
-    list.innerHTML = a.length ? a.map((s,i)=>`
+    list.innerHTML = a.length ? a.map((s)=>`
       <div class="log-entry">
         <b>${new Date(s.ts).toLocaleString()}</b><br>
         ${s.text}
@@ -319,10 +318,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <main>
 
-<!-- IGNITE -->
 <div id="ignite" class="section">
   <h1>Ignite</h1>
-  <p>The first spark. A clean onset. A single upward move.</p>
+  <p>The activation spark. The shift from stillness to motion.</p>
 
   <div id="sparkBoard">
     <h2>Sparks</h2>
@@ -334,18 +332,16 @@ document.addEventListener("DOMContentLoaded",()=>{
   <a class="action-btn" href="#" onclick="show('switch')">Enter Switch</a>
 </div>
 
-<!-- SWITCH -->
 <div id="switch" class="section">
   <h1>Switch</h1>
-  <p>The flip. The mode-change. The action hub for returning visitors.</p>
+  <p>Mode-change. The flip from passive to active. The Fire home state.</p>
   <a class="action-btn" href="#" onclick="show('accelerate')">Accelerate</a>
   <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
 </div>
 
-<!-- ACCELERATE -->
 <div id="accelerate" class="section">
   <h1>Accelerate</h1>
-  <p>Momentum builds. Movement sharpens. A forward pull.</p>
+  <p>Momentum builds. State velocity rises.</p>
 
   <div id="momentum">
     <h2>Momentum Log</h2>
@@ -359,10 +355,9 @@ document.addEventListener("DOMContentLoaded",()=>{
   <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
 </div>
 
-<!-- ASCEND -->
 <div id="ascend" class="section">
   <h1>Ascend</h1>
-  <p>The lift upward. Choose your next path below.</p>
+  <p>Transition upward. The Fire exit.</p>
 </div>
 
 </main>
