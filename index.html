@@ -28,6 +28,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
+/* NAV */
 header{
   position:fixed;
   top:0;
@@ -59,6 +60,7 @@ header{
   background:var(--glass);
 }
 
+/* MAIN */
 main{
   padding-top:80px;
   padding-bottom:140px;
@@ -110,7 +112,7 @@ p{
   font-weight:600;
 }
 
-/* spark board */
+/* SPARK BOARD */
 #sparkBoard input{
   width:100%;
   padding:12px;
@@ -143,7 +145,7 @@ p{
   opacity:.6;
 }
 
-/* momentum log */
+/* MOMENTUM LOG */
 #momentum textarea{
   width:100%;
   min-height:90px;
@@ -174,6 +176,7 @@ p{
   margin:10px 0;
 }
 
+/* FOOTER */
 footer{
   width:100%;
   padding:28px 20px;
@@ -208,7 +211,7 @@ footer{
 </style>
 
 <script>
-// routing
+// ROUTING
 document.addEventListener("DOMContentLoaded", () => {
   const first = !localStorage.getItem("fire-visited");
   if(first){
@@ -220,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   revealSetup();
 });
 
-// panel routing
+// PANEL ROUTING
 function show(id){
   ["ignite","switch","accelerate","ascend"].forEach(x=>{
     document.getElementById(x).style.display="none";
@@ -228,7 +231,7 @@ function show(id){
   document.getElementById(id).style.display="block";
 }
 
-// reveal animation
+// REVEAL ANIMATION
 function revealSetup(){
   const io=new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
@@ -238,9 +241,9 @@ function revealSetup(){
   document.querySelectorAll(".section").forEach(s=>io.observe(s));
 }
 
-// spark board
+// SPARK BOARD
 document.addEventListener("DOMContentLoaded",()=>{
-  const KEY="fire.sparks.v3";
+  const KEY="fire.sparks.v4";
   const list=document.getElementById("sparkList");
   const input=document.getElementById("sparkInput");
 
@@ -270,9 +273,9 @@ document.addEventListener("DOMContentLoaded",()=>{
   render();
 });
 
-// momentum log
+// MOMENTUM LOG
 document.addEventListener("DOMContentLoaded",()=>{
-  const KEY="fire.momentum.v2";
+  const KEY="fire.momentum.v3";
   const list=document.getElementById("logList");
   const text=document.getElementById("logText");
 
@@ -308,22 +311,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <header>
   <div class="nav">
-    <a href="#" onclick="show('ignite')">Ignite</a>
-    <a href="#" onclick="show('switch')">Switch</a>
-    <a href="#" onclick="show('accelerate')">Accelerate</a>
-    <a href="#" onclick="show('ascend')">Ascend</a>
+    <a href="#" onclick="show('ignite')">Ignite · dS/dτ Begins</a>
+    <a href="#" onclick="show('switch')">Switch · Mode Shift</a>
+    <a href="#" onclick="show('accelerate')">Accelerate · Velocity</a>
+    <a href="#" onclick="show('ascend')">Ascend · Transition</a>
     <a href="https://four.plnt.earth">FOUR</a>
   </div>
 </header>
 
 <main>
 
+<!-- IGNITE -->
 <div id="ignite" class="section">
   <h1>Ignite</h1>
-  <p>The activation spark. The shift from stillness to motion.</p>
+  <p>The activation spark. The moment the system leaves stillness.  
+  Fire establishes <b>dS/dτ > 0</b> — the first nonzero temporal gradient.</p>
 
   <div id="sparkBoard">
     <h2>Sparks</h2>
+    <p>Single-step impulses. Minimal τ-inputs that begin motion.</p>
     <input id="sparkInput" placeholder="One-line spark">
     <a href="#" id="sparkAdd" class="spark-add">Add</a>
     <div id="sparkList" style="margin-top:14px"></div>
@@ -332,19 +338,25 @@ document.addEventListener("DOMContentLoaded",()=>{
   <a class="action-btn" href="#" onclick="show('switch')">Enter Switch</a>
 </div>
 
+<!-- SWITCH -->
 <div id="switch" class="section">
   <h1>Switch</h1>
-  <p>Mode-change. The flip from passive to active. The Fire home state.</p>
+  <p>The system switches mode.  
+  Fire rotates the active state-vector — the <b>phase flip</b> that prepares Knife’s directional collapse.</p>
+
   <a class="action-btn" href="#" onclick="show('accelerate')">Accelerate</a>
   <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
 </div>
 
+<!-- ACCELERATE -->
 <div id="accelerate" class="section">
   <h1>Accelerate</h1>
-  <p>Momentum builds. State velocity rises.</p>
+  <p>The state gains velocity.  
+  Fire increases temporal momentum toward Knife’s branch definition.</p>
 
   <div id="momentum">
     <h2>Momentum Log</h2>
+    <p>Record what gained motion. Small pushes accumulate.</p>
     <textarea id="logText" placeholder="What moved today?"></textarea>
     <div style="margin-top:12px">
       <a href="#" id="logSave" class="log-btn">Save</a>
@@ -355,9 +367,11 @@ document.addEventListener("DOMContentLoaded",()=>{
   <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
 </div>
 
+<!-- ASCEND -->
 <div id="ascend" class="section">
   <h1>Ascend</h1>
-  <p>Transition upward. The Fire exit.</p>
+  <p>The upward transition.  
+  Fire passes its activated state to Knife and Key, completing the motion cycle.</p>
 </div>
 
 </main>
