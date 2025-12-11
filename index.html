@@ -1,106 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fire — Transformation Lab · PLNT Earth</title>
-<meta name="description" content="Fire: design safe transformation. Spark ideas, test risk, log reversible changes. No autoplay, no heavy effects.">
-<meta name="theme-color" content="#0b0d11"><meta name="prophet" content="💄 The Neon Prophet — Flame Dancer of PLNT Earth">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fire.plnt.earth</title>
+<meta name="color-scheme" content="dark">
+
 <style>
-:root{--bg:#0b0d11;--fg:#e8ecf6;--mut:#a9b4c7;--line:#23262b;--card:#12151b;--flame:#ff8a4b;--ok:#34d399}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
-a{color:#8ecae6;text-decoration:none}a:hover{text-decoration:underline}
-.wrap{max-width:980px;margin:0 auto;padding:18px 16px 112px}
-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-h1{margin:0;font-size:clamp(22px,4vw,34px)}
-.sub{color:var(--mut);font-size:.98rem}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;transform:translateY(6px);opacity:0;transition:transform .45s ease,opacity .45s ease}
-.card.reveal{transform:translateY(0);opacity:1}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.input,textarea{width:100%;background:#0f1218;border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:10px;min-height:44px}
-textarea{min-height:100px;resize:vertical}
-.badge{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--mut);font-size:12px}
-.small{font-size:12px;color:var(--mut)}
-.ok{color:var(--ok)}
-.spark{border-left:3px solid var(--flame);padding-left:10px}
-.sigil{position:fixed;right:12px;bottom:8px;opacity:.25;font-size:20px;user-select:none;pointer-events:none;z-index:9999}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>Fire — Transformation Lab</h1>
-      <div class="sub">Design changes that make things kinder and clearer. Every action should be <b>ethical, reversible, and logged</b>.</div>
-    </div>
-    <nav class="actions"><a class="badge" href="https://bridge.plnt.earth">🌉 Bridge</a><a class="badge" href="https://jar.plnt.earth">Jar</a></nav>
-  </header>
+:root{
+  --bg:#090b11;
+  --ink:#f5f5ff;
+  --fire:#ff4d2f;
+  --glass:rgba(255,255,255,0.08);
+  --glass2:rgba(255,255,255,0.15);
+}
 
-  <!-- Spark Board -->
-  <section class="card reveal">
-    <div class="row" style="justify-content:space-between"><h2 style="margin:0">Spark Board</h2><span class="badge">idea → test → merge</span></div>
-    <div class="row"><input id="sparkTitle" class="input" placeholder="One-line spark"><button id="sparkAdd" class="badge">Add</button></div>
-    <div id="sparkList" style="margin-top:8px"></div>
-    <p class="small">Use quick, low-risk sparks. If it lands, graduate to a Bridge pattern break.</p>
-  </section>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-  <!-- Risk Checklist -->
-  <section class="card reveal">
-    <div class="row" style="justify-content:space-between"><h2 style="margin:0">Risk Checklist</h2><span class="badge">safety first</span></div>
-    <div class="spark small">
-      <label><input type="checkbox" class="rc" value="reversible"> Can I undo this in one step?</label><br>
-      <label><input type="checkbox" class="rc" value="ethical"> Does it respect consent and credit?</label><br>
-      <label><input type="checkbox" class="rc" value="quiet"> No autoplay / no blasts / calm visuals?</label><br>
-      <label><input type="checkbox" class="rc" value="scope"> Scope is tiny (5–15 minutes)?</label>
-    </div>
-    <div class="row" style="margin-top:8px"><button class="btn" id="rcCopy">Copy status</button><span id="rcOut" class="small">—</span></div>
-  </section>
+body{
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
 
-  <!-- Flame Log -->
-  <section class="card reveal">
-    <div class="row" style="justify-content:space-between"><h2 style="margin:0">Flame Log</h2><span class="badge">local-only</span></div>
-    <div class="row"><textarea id="logText" placeholder="What changed? Why? How to revert?"></textarea></div>
-    <div class="row" style="margin-top:8px"><button class="btn" id="logSave">Save Entry</button><button class="btn" id="logExport">Export JSON</button><button class="btn" id="logClear">Clear</button></div>
-    <div id="logList" style="margin-top:8px"></div>
-    <p class="small">Keep entries short. Every change must include a one-step revert plan.</p>
-  </section>
-</div>
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  backdrop-filter:blur(12px);
+  background:rgba(0,0,0,0.3);
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:10;
+}
 
-<div class="sigil" aria-hidden="true">💄</div>
+.nav{
+  display:flex;
+  gap:16px;
+  font-size:14px;
+}
 
-<script>
-/* Reveal */
-(function(){var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.classList.add('reveal')}}},{threshold:.06});document.querySelectorAll('.card').forEach(c=>io.observe(c));})();
+.nav a{
+  color:var(--ink);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+.nav a:hover{
+  background:var(--glass);
+}
+
+main{
+  padding-top:80px;
+  padding-bottom:140px;
+  max-width:700px;
+  margin:0 auto;
+}
+
+.section{
+  padding:40px 24px;
+  margin:24px 0;
+  background:var(--glass);
+  border:1px solid var(--glass2);
+  border-radius:12px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+
+.section.reveal{
+  opacity:1;
+  transform:translateY(0);
+}
+
+h1{
+  font-size:32px;
+  margin-bottom:16px;
+  color:var(--fire);
+}
+
+h2{
+  font-size:22px;
+  margin-bottom:12px;
+  color:var(--fire);
+}
+
+p{
+  line-height:1.6;
+  margin-bottom:14px;
+}
+
+.action-btn{
+  display:inline-block;
+  margin:12px 0;
+  padding:12px 18px;
+  background:var(--fire);
+  color:#000;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
+}
 
 /* Spark Board */
-(function(){
-  var KEY='fire.sparks.v1', list=document.getElementById('sparkList');
-  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}}
-  function write(x){localStorage.setItem(KEY,JSON.stringify(x))}
-  function render(){var a=read(); list.innerHTML=a.length? a.map((s,i)=>'<div class="card" style="margin:8px 0"><div class="row" style="justify-content:space-between"><b>'+s.t+'</b><span class="small">'+new Date(s.ts).toLocaleString()+'</span></div><div class="row"><button class="btn" data-i="'+i+'" data-act="merge">Mark merged</button><button class="btn" data-i="'+i+'" data-act="del">Delete</button></div></div>').join('') : '<div class="small">No sparks yet.</div>'; var btns=list.querySelectorAll('button'); btns.forEach(b=>b.onclick=function(){var i=parseInt(this.getAttribute('data-i'),10),act=this.getAttribute('data-act'); var a=read(); if(act==='del'){a.splice(i,1)} if(act==='merge'){a[i].merged=true} write(a); render();}); }
-  document.getElementById('sparkAdd').onclick=function(){var t=document.getElementById('sparkTitle').value.trim(); if(!t) return; var a=read(); a.unshift({t,ts:Date.now(),merged:false}); write(a); document.getElementById('sparkTitle').value=''; render();};
-  render();
-})();
+#sparkBoard input{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid var(--glass2);
+  background:rgba(255,255,255,0.04);
+  color:var(--ink);
+}
 
-/* Risk checklist */
-(function(){
-  var boxes=document.querySelectorAll('.rc'), out=document.getElementById('rcOut');
-  function summarize(){var got={}; boxes.forEach(b=>{if(b.checked) got[b.value]=true}); var ok = ['reversible','ethical','quiet','scope'].every(k=>got[k]); out.textContent = ok? 'OK to run (tiny step).' : 'Not ready — tighten safety.'; out.classList.toggle('ok', ok);}
-  boxes.forEach(b=>b.onchange=summarize); summarize();
-  document.getElementById('rcCopy').onclick=function(){ try{navigator.clipboard.writeText(out.textContent);}catch(_){ } };
-})();
+.spark-add{
+  display:inline-block;
+  padding:10px 16px;
+  margin-top:10px;
+  background:var(--fire);
+  color:#000;
+  border-radius:6px;
+  font-weight:600;
+  text-decoration:none;
+}
 
-/* Flame log */
-(function(){
-  var KEY='fire.log.v1', list=document.getElementById('logList'), text=document.getElementById('logText');
-  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(_){return[]}}
-  function write(x){localStorage.setItem(KEY,JSON.stringify(x))}
-  function render(){var a=read(); list.innerHTML=a.length? a.map((s,i)=>'<div class="card" style="margin:8px 0"><div class="row" style="justify-content:space-between"><b>'+new Date(s.ts).toLocaleString()+'</b><button class="btn" data-i="'+i+'" data-act="del">Delete</button></div><div class="small">'+(s.text||'')+'</div></div>').join('') : '<div class="small">No entries yet.</div>'; list.querySelectorAll('button').forEach(b=>b.onclick=function(){var i=parseInt(this.getAttribute('data-i'),10); var a=read(); a.splice(i,1); write(a); render();}); }
-  document.getElementById('logSave').onclick=function(){var v=(text.value||'').trim(); if(!v) return; var a=read(); a.unshift({ts:Date.now(), text:v}); write(a); text.value=''; render();};
-  document.getElementById('logExport').onclick=function(){var blob=new Blob([JSON.stringify(read(),null,2)],{type:"application/json"}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download="fire_log.json"; a.click(); setTimeout(function(){URL.revokeObjectURL(a.href)},1000);};
-  document.getElementById('logClear').onclick=function(){ localStorage.removeItem(KEY); render(); };
+.spark-item{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--glass2);
+  border-radius:10px;
+  padding:12px;
+  margin:10px 0;
+}
+
+.spark-item small{
+  opacity:.6;
+}
+
+/* Momentum Log */
+#momentum textarea{
+  width:100%;
+  min-height:90px;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid var(--glass2);
+  background:rgba(255,255,255,0.04);
+  color:var(--ink);
+  resize:vertical;
+}
+
+.log-btn{
+  display:inline-block;
+  padding:10px 16px;
+  background:var(--fire);
+  color:#000;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
+  margin-right:10px;
+}
+
+.log-entry{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--glass2);
+  padding:12px;
+  border-radius:10px;
+  margin:10px 0;
+}
+
+footer{
+  width:100%;
+  padding:28px 20px;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+  position:fixed;
+  bottom:0;
+  left:0;
+  font-size:14px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.footer-links a{
+  color:var(--ink);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+.footer-links a:hover{
+  background:var(--glass);
+}
+
+/* hide panels until routing */
+#ignite, #switch, #accelerate, #ascend{
+  display:none;
+}
+</style>
+
+<script>
+// routing
+document.addEventListener("DOMContentLoaded", () => {
+  const first = !localStorage.getItem("fire-visited");
+  if(first){
+    localStorage.setItem("fire-visited","yes");
+    show("ignite");
+  } else {
+    show("switch");
+  }
+  revealSetup();
+});
+
+// show panels
+function show(id){
+  ["ignite","switch","accelerate","ascend"].forEach(x=>{
+    document.getElementById(x).style.display="none";
+  });
+  document.getElementById(id).style.display="block";
+}
+
+// reveal animation
+function revealSetup(){
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add("reveal");
+    })
+  },{threshold:.08});
+  document.querySelectorAll(".section").forEach(s=>io.observe(s));
+}
+
+// spark board
+document.addEventListener("DOMContentLoaded",()=>{
+  const KEY="fire.sparks.v2";
+  const list=document.getElementById("sparkList");
+  const input=document.getElementById("sparkInput");
+
+  function read(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}}
+  function write(v){localStorage.setItem(KEY,JSON.stringify(v))}
+
+  function render(){
+    const a=read();
+    list.innerHTML = a.length ? a.map((s,i)=>`
+      <div class="spark-item">
+        <b>${s.t}</b><br>
+        <small>${new Date(s.ts).toLocaleString()}</small>
+      </div>
+    `).join("") : `<p class="small">No sparks yet.</p>`;
+  }
+
+  document.getElementById("sparkAdd").onclick=()=>{
+    const v=input.value.trim();
+    if(!v) return;
+    const a=read();
+    a.unshift({t:v, ts:Date.now()});
+    write(a);
+    input.value="";
+    render();
+  };
+
   render();
-})();
+});
+
+// momentum log
+document.addEventListener("DOMContentLoaded",()=>{
+  const KEY="fire.momentum.v1";
+  const list=document.getElementById("logList");
+  const text=document.getElementById("logText");
+
+  function read(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}}
+  function write(v){localStorage.setItem(KEY,JSON.stringify(v))}
+
+  function render(){
+    const a=read();
+    list.innerHTML = a.length ? a.map((s,i)=>`
+      <div class="log-entry">
+        <b>${new Date(s.ts).toLocaleString()}</b><br>
+        ${s.text}
+      </div>
+    `).join("") : `<p class="small">No entries yet.</p>`;
+  }
+
+  document.getElementById("logSave").onclick=()=>{
+    const v=text.value.trim();
+    if(!v) return;
+    const a=read();
+    a.unshift({ts:Date.now(), text:v});
+    write(a);
+    text.value="";
+    render();
+  };
+
+  render();
+});
 </script>
+
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#" onclick="show('ignite')">Ignite</a>
+    <a href="#" onclick="show('switch')">Switch</a>
+    <a href="#" onclick="show('accelerate')">Accelerate</a>
+    <a href="#" onclick="show('ascend')">Ascend</a>
+    <a href="https://four.plnt.earth">FOUR</a>
+  </div>
+</header>
+
+<main>
+
+<!-- IGNITE -->
+<div id="ignite" class="section">
+  <h1>Ignite</h1>
+  <p>The first spark. A clean onset. A single upward move.</p>
+
+  <div id="sparkBoard">
+    <h2>Sparks</h2>
+    <input id="sparkInput" placeholder="One-line spark">
+    <a href="#" id="sparkAdd" class="spark-add">Add</a>
+    <div id="sparkList" style="margin-top:14px"></div>
+  </div>
+
+  <a class="action-btn" href="#" onclick="show('switch')">Enter Switch</a>
+</div>
+
+<!-- SWITCH -->
+<div id="switch" class="section">
+  <h1>Switch</h1>
+  <p>The flip. The mode-change. The action hub for returning visitors.</p>
+  <a class="action-btn" href="#" onclick="show('accelerate')">Accelerate</a>
+  <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
+</div>
+
+<!-- ACCELERATE -->
+<div id="accelerate" class="section">
+  <h1>Accelerate</h1>
+  <p>Momentum builds. Movement sharpens. A forward pull.</p>
+
+  <div id="momentum">
+    <h2>Momentum Log</h2>
+    <textarea id="logText" placeholder="What moved today?"></textarea>
+    <div style="margin-top:12px">
+      <a href="#" id="logSave" class="log-btn">Save</a>
+    </div>
+    <div id="logList" style="margin-top:14px"></div>
+  </div>
+
+  <a class="action-btn" href="#" onclick="show('ascend')">Ascend</a>
+</div>
+
+<!-- ASCEND -->
+<div id="ascend" class="section">
+  <h1>Ascend</h1>
+  <p>The lift upward. Choose your next path below.</p>
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="https://map.plnt.earth">Map</a>
+    <a href="https://knife.plnt.earth">Knife</a>
+    <a href="https://key.plnt.earth">Key</a>
+    <a href="https://earth.plnt.earth">Earth</a>
+    <a href="https://four.plnt.earth">Four</a>
+  </div>
+</footer>
+
 </body>
 </html>
